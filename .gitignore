@@ -12,3 +12,5 @@ test/timur
 test/kinan
 test/*.ans
 test/*.tar
+.vs
+hashcode
