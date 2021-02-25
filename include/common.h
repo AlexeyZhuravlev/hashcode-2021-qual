@@ -129,7 +129,7 @@ struct Context {
         for (const auto& [moment, street, duration] : green) {
             auto& queue = StreetEndQueue[street];
             int curMoment = moment;
-            while (curMoment < duration && queue.size()) {
+            while (curMoment < moment + duration && queue.size()) {
                 const auto it = queue.begin();
                 const auto& [getMoment, carId, pathIdx] = *it;
 //                std::cerr << getMoment << " " << carId << " " << pathIdx << std::endl;
