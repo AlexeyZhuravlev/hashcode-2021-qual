@@ -18,6 +18,19 @@ using namespace std;
 
 struct MySolver : public Context {
     void Solve() {
+        for (int i = 0; i < CarN; i++) {
+            int len = 0;
+            for (int j = 0; j < Path[i].size(); j++) {
+                if (Street[Path[i][j]].U == 499 || Street[Path[i][j]].V == 499) {
+                    cerr << j << endl;
+                    break;
+                }
+                // len += Street[Path[i][j]].Cost;
+            }
+            if (len != 0) {
+                // cerr << len << endl;
+            }
+        }
         Solution.resize(IntersectionN);
         for (int i = 0; i < IntersectionN; i++) {
             Solution[i].IncomingStreetDuration.resize(IncomingStreets[i].size());

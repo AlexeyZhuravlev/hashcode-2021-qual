@@ -58,7 +58,7 @@ struct Context {
         for (int i = 0; i < CarN; i++) {
             int p;
             cin >> p;
-            for (int i = 0; i < p; i++) {
+            for (int j = 0; j < p; j++) {
                 string streetName;
                 cin >> streetName;
                 Path[i].push_back(StreetNameToID[streetName]);
