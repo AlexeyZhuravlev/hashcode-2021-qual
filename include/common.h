@@ -94,8 +94,65 @@ struct Context {
         }
     }
 
+    struct CarState {
+        int streetId;
+        int positionInQueue;
+    };
+
+
     uint64_t GetScore() {
-        return 0;
+        vector<tuple<int, int, int>> green;  // moment, street, duration
+        for (int i = 0; i < IntersectionN; i++) {
+
+            auto& entry = Solution[i];
+            auto& durations = entry.IncomingStreetDuration;
+
+            int moment = 0;
+            int j = 0;
+            while (moment < SimDuration) {
+                if (durations[j]) {
+                    green.emplace_back(moment, IncomingStreets[i][j], durations[j]);
+                    moment += durations[j];
+                }
+                j = (j + 1) % durations.size();
+            }
+        }
+        std::sort(green.begin(), green.end());
+
+        vector<set<tuple<int, int, int>>> StreetEndQueue(StreetN);
+        for (int i = 0; i < CarN; ++i) {
+            StreetEndQueue[Path[i][0]].emplace(0, i, 0);
+        }
+
+
+        int score = 0;
+        for (const auto& [moment, street, duration] : green) {
+            auto& queue = StreetEndQueue[street];
+            int curMoment = moment;
+            while (curMoment < duration && queue.size()) {
+                const auto it = queue.begin();
+                const auto& [getMoment, carId, pathIdx] = *it;
+//                std::cerr << getMoment << " " << carId << " " << pathIdx << std::endl;
+                if (getMoment < moment + duration) {
+                    curMoment = max(curMoment, getMoment); // be aware
+                    const auto& nextStreet = Path[carId][pathIdx + 1];
+                    if (pathIdx + 1 == Path[carId].size() - 1) {  // the last street for car
+                        if (curMoment + Street[nextStreet].Cost <= SimDuration) {
+                            score += SimDuration - (curMoment + Street[nextStreet].Cost) + EarlyBonus;
+                        }
+                    } else {
+                        StreetEndQueue[nextStreet].emplace(curMoment + Street[nextStreet].Cost,
+                                                                         carId, pathIdx + 1);
+                    }
+                    ++curMoment;
+                    queue.erase(queue.begin());
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return score;
     }
     
 };
