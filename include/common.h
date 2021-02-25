@@ -126,12 +126,19 @@ struct Context {
 
 
         int score = 0;
-        for (const auto& [moment, street, duration] : green) {
+        for (const auto& ttt : green) {
+            const auto& moment = std::get<0>(ttt);
+            const auto& street = std::get<1>(ttt);
+            const auto& duration = std::get<2>(ttt);
+
             auto& queue = StreetEndQueue[street];
             int curMoment = moment;
             while (curMoment < moment + duration && queue.size()) {
                 const auto it = queue.begin();
-                const auto& [getMoment, carId, pathIdx] = *it;
+                const auto& getMoment = std::get<0>(*it);
+                const auto& carId = std::get<1>(*it);
+                const auto& pathIdx = std::get<2>(*it);
+                
 //                std::cerr << getMoment << " " << carId << " " << pathIdx << std::endl;
                 if (getMoment < moment + duration) {
                     curMoment = max(curMoment, getMoment); // be aware
