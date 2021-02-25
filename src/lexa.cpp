@@ -43,7 +43,11 @@ struct MySolver : public Context {
             for (int j = 0; j < IncomingStreets[i].size(); j++) {
                 int street = IncomingStreets[i][j];
                 double weight = streetCounts[street] / totalStreetCount;
-                Solution[i].IncomingStreetDuration[j] = streetCounts[street];
+                if (streetCounts[street] == 0) {
+                    Solution[i].IncomingStreetDuration[j] = 0;
+                } else {
+                    Solution[i].IncomingStreetDuration[j] = int(sqrt(streetCounts[street]));
+                }
             }
         }
     }
