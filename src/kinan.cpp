@@ -18,7 +18,13 @@ using namespace std;
 
 struct MySolver : public Context {
     void Solve() {
-        // Solution goes here
+        Solution.resize(IntersectionN);
+        for (int i = 0; i < IntersectionN; i++) {
+            Solution[i].IncomingStreetDuration.resize(IncomingStreets[i].size());
+            for (int j = 0; j < IncomingStreets[i].size(); j++) {
+                Solution[i].IncomingStreetDuration[j] = 1;
+            }
+        }
     }
 };
 
