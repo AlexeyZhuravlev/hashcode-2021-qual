@@ -18,7 +18,43 @@ using namespace std;
 
 struct MySolver : public Context {
     void Solve() {
-        // Solution goes here
+        std::vector<int> streetCounts(StreetN, 0);
+        std::vector<int> routeBegin(StreetN, 0);
+        for (int i = 0; i < CarN; ++i) {
+            for (int j = 0; j < Path[i].size(); ++j) {
+                ++streetCounts[Path[i][j]];
+            }
+            ++routeBegin[Path[i][0]];
+        }
+        Solution.resize(IntersectionN);
+        for (int i = 0; i < IntersectionN; i++) {
+            Solution[i].IncomingStreetDuration.resize(IncomingStreets[i].size());
+            sort(IncomingStreets[i].begin(), IncomingStreets[i].end(), [&routeBegin](int stA, int stB) {
+                return routeBegin[stA] > routeBegin[stB];
+            });
+            int totalStreetCount = 0;
+            for (int j = 0; j < IncomingStreets[i].size(); j++) {
+                int street = IncomingStreets[i][j];
+                totalStreetCount += streetCounts[street];
+            }
+            if (totalStreetCount == 0) {
+                for (int j = 0; j < IncomingStreets[i].size(); j++) {
+                    Solution[i].IncomingStreetDuration[j] = 1;
+                }
+                continue;
+            }
+
+            int curCount = IncomingStreets[i].size();
+            for (int j = 0; j < IncomingStreets[i].size(); j++) {
+                int street = IncomingStreets[i][j];
+                double weight = streetCounts[street] / totalStreetCount;
+                if (streetCounts[street] == 0) {
+                    Solution[i].IncomingStreetDuration[j] = 0;
+                } else {
+                    Solution[i].IncomingStreetDuration[j] = int(sqrt(streetCounts[street]));
+                }
+            }
+        }
     }
 };
 
